@@ -33,10 +33,10 @@ data_cleaner:
 
 # 数据库配置
 database:
-  host: "${DB_HOST:-localhost}"
-  port: "${DB_PORT:-3306}"
-  user: "${DB_USER:-root}"
-  password: "${DB_PASSWORD:-}"
+  host: "localhost"
+  port: 3306
+  user: "root"
+  password: ""
   database: "retail_sales_db"
 
 # API 服务配置

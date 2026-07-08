@@ -115,10 +115,10 @@ class RetailAnalyzer:
         ).reset_index().sort_values("revenue", ascending=False)
         fig = make_subplots(rows=2, cols=2,
                             subplot_titles=("区域销售额", "区域订单量", "区域客户数", "区域客单价"))
-        for i, (col, colors) in enumerate([("revenue", "Blues_r"), ("orders", "Greens_r"),
-                                            ("customers", "Oranges_r"), ("avg_order", "Reds_r")]):
-            fig.add_trace(go.Bar(x=region["region"], y=region[col],
-                                  marker_color=px.colors.sequential[colors][:len(region)]),
+        color_schemes = ["Blues_r", "Greens_r", "Oranges_r", "Reds_r"]
+        for i, (col, scheme) in enumerate(zip(["revenue", "orders", "customers", "avg_order"], color_schemes)):
+            colors_list = getattr(px.colors.sequential, scheme)[:len(region)]
+            fig.add_trace(go.Bar(x=region["region"], y=region[col], marker_color=colors_list),
                           row=i//2+1, col=i%2+1)
         fig.update_layout(title="区域销售多维度分析", height=700, template="plotly_white", showlegend=False)
         self.figures["regional_sales"] = fig
