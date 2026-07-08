@@ -23,8 +23,7 @@ env/
 *.swo
 
 # Data files (large files should not be committed)
-data/*.csv
-data/*.xlsx
+data/
 
 # Output
 output/
