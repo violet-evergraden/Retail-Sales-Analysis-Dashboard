@@ -1,0 +1,90 @@
+# ============================================
+# 零售销售分析仪表板 - 全局配置
+# ============================================
+
+project:
+  name: "Retail Sales Analysis Dashboard"
+  version: "2.0.0"
+  description: "全流程零售数据分析项目"
+
+# 数据生成配置
+data_generator:
+  num_records: 120000
+  date_range:
+    start: "2023-01-01"
+    end: "2025-12-31"
+  missing_rate:
+    unit_price: 0.02
+    quantity: 0.015
+    category: 0.01
+    region: 0.005
+    payment_method: 0.01
+  outlier_rate:
+    high_price: 0.003
+    negative_quantity: 0.002
+    abnormal_discount: 0.001
+
+# 数据清洗配置
+data_cleaner:
+  iqr_multiplier: 3.0
+  max_discount_rate: 0.5
+  default_quantity: 1
+  unknown_fill: "未知"
+
+# 数据库配置
+database:
+  host: "${DB_HOST:-localhost}"
+  port: "${DB_PORT:-3306}"
+  user: "${DB_USER:-root}"
+  password: "${DB_PASSWORD:-}"
+  database: "retail_sales_db"
+
+# API 服务配置
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  cors_origins: ["*"]
+
+# 仪表板配置
+dashboard:
+  host: "0.0.0.0"
+  port: 8050
+  debug: false
+  theme: "darkly"  # darkly, flatly, cyborg, solar
+
+# 分析配置
+analysis:
+  moving_average_windows: [7, 30]
+  top_n_categories: 10
+  repurchase_threshold: 2
+  rfm_weights:
+    recency: 0.3
+    frequency: 0.3
+    monetary: 0.4
+
+# 机器学习配置
+ml:
+  forecasting:
+    method: "prophet"  # prophet, arima, exponential
+    forecast_days: 90
+    seasonality_mode: "multiplicative"
+  clustering:
+    method: "kmeans"
+    n_clusters: 5
+    random_state: 42
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-8s | %(name)-20s | %(message)s"
+  file: "output/app.log"
+  max_bytes: 10485760
+  backup_count: 5
+
+# 输出路径
+paths:
+  data_dir: "data"
+  output_dir: "output"
+  charts_dir: "output/charts"
+  reports_dir: "output/reports"

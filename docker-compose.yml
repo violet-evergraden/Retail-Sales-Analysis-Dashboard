@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: retail_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: retail_pass
+      MYSQL_DATABASE: retail_sales_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql_queries.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API + 仪表板服务
+  app:
+    build: .
+    container_name: retail_dashboard
+    ports:
+      - "8000:8000"
+      - "8050:8050"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: retail_pass
+      API_PORT: 8000
+      DASHBOARD_PORT: 8050
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: ["python", "main.py", "--service", "all"]
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+
+volumes:
+  mysql_data:

@@ -7,6 +7,9 @@ __pycache__/
 dist/
 build/
 *.egg
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Virtual Environment
 venv/
@@ -25,6 +28,13 @@ data/*.xlsx
 
 # Output
 output/
+
+# Docker
+docker-compose.override.yml
+
+# Environment
+.env
+.env.local
 
 # OS
 .DS_Store
