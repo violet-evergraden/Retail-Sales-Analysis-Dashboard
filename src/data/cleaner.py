@@ -164,7 +164,7 @@ class DataCleaner:
         self.metrics["monthly_region"] = mr
 
         logger.info(f"  复购率: {self.report['复购率']}%")
-        logger.info(f"  日均销售额: ¥{daily['revenue'].mean():,.0f}")
+        logger.info(f"  日均销售额: {daily['revenue'].mean():,.0f} 元")
 
     def save(self, df: pd.DataFrame, output_dir: Optional[str] = None) -> str:
         if output_dir is None:

@@ -53,7 +53,7 @@ def main():
         n = args.records or settings.data_generator.num_records
         raw_df = gen.generate(n=n)
         gen.save(raw_df)
-        logger.info(f"✅ 数据生成完成: {len(raw_df)} 条")
+        logger.info(f"数据生成完成: {len(raw_df)} 条")
 
     # ========== 数据清洗 ==========
     if args.service in ("clean", "analyze", "api", "dashboard", "all"):
@@ -69,7 +69,7 @@ def main():
         cleaner = DataCleaner()
         df = cleaner.clean(raw_df)
         cleaner.save(df)
-        logger.info("✅ 数据清洗完成")
+        logger.info("数据清洗完成")
 
     # ========== 数据分析 + ML ==========
     if args.service in ("analyze", "dashboard", "all"):
@@ -87,7 +87,7 @@ def main():
             from src.models import SalesForecaster
             forecaster = SalesForecaster()
             forecast_df = forecaster.fit_predict(df)
-            logger.info("✅ 销售预测完成")
+            logger.info("销售预测完成")
         except Exception as e:
             logger.warning(f"销售预测跳过: {e}")
 
@@ -96,7 +96,7 @@ def main():
             from src.models import CustomerSegmenter
             segmenter = CustomerSegmenter()
             segment_df = segmenter.cluster(df)
-            logger.info("✅ 客户聚类完成")
+            logger.info("客户聚类完成")
         except Exception as e:
             logger.warning(f"客户聚类跳过: {e}")
 
@@ -108,10 +108,10 @@ def main():
 
         try:
             analyzer.generate_pdf_report()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"PDF报告生成失败: {e}")
 
-        logger.info(f"✅ 分析完成: {len(figures)} 张图表, {len(insights)} 条洞察")
+        logger.info(f"分析完成: {len(figures)} 张图表, {len(insights)} 条洞察")
 
         for i, ins in enumerate(insights, 1):
             logger.info(f"  [{i}] [{ins['type']}] {ins['title']}: {ins['detail']}")

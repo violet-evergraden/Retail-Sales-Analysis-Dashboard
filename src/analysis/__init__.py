@@ -171,7 +171,8 @@ class RetailAnalyzer:
         summary = self.segment_df.groupby("segment").agg(
             count=("customer_id", "count"), avg_monetary=("monetary", "mean"),
         ).reset_index()
-        fig = make_subplots(rows=1, cols=2, subplot_titles=("客户分群人数", "分群平均消费"))
+        fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "xy"}]],
+                            subplot_titles=("客户分群人数", "分群平均消费"))
         fig.add_trace(go.Pie(labels=summary["segment"], values=summary["count"], hole=0.4), row=1, col=1)
         fig.add_trace(go.Bar(x=summary["segment"], y=summary["avg_monetary"], marker_color="#00CC96"), row=1, col=2)
         fig.update_layout(title="客户RFM聚类分群", height=450, template="plotly_white")
@@ -219,6 +220,7 @@ class RetailAnalyzer:
             from reportlab.lib.units import cm
             from reportlab.lib.colors import HexColor, white
 
+            logger.info(f"开始生成PDF报告...")
             doc = SimpleDocTemplate(output_path, pagesize=A4,
                                      rightMargin=1.5*cm, leftMargin=1.5*cm, topMargin=2*cm, bottomMargin=2*cm)
             styles = getSampleStyleSheet()
@@ -241,9 +243,15 @@ class RetailAnalyzer:
                 elements.append(Paragraph(f"  → {ins['suggestion']}", styles["Body2"]))
                 elements.append(Spacer(1, 8))
 
+            logger.info(f"构建PDF文档，共{len(elements)}个元素...")
             doc.build(elements)
-            logger.info(f"PDF报告已生成: {output_path}")
+            
+            # 验证文件大小
+            file_size = Path(output_path).stat().st_size
+            logger.info(f"PDF报告已生成: {output_path} (大小: {file_size:,} 字节)")
             return output_path
         except Exception as e:
-            logger.warning(f"PDF生成失败: {e}")
+            import traceback
+            logger.error(f"PDF生成失败: {e}")
+            logger.error(traceback.format_exc())
             return None

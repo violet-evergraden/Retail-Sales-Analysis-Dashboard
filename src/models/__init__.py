@@ -101,7 +101,7 @@ class SalesForecaster:
         self.forecast_df["is_forecast"] = self.forecast_df["actual"].isna()
 
         logger.info(f"指数平滑预测完成: 参数 α={best_params[0]}, β={best_params[1]}, γ={best_params[2]}")
-        logger.info(f"预测未来 {forecast_days} 天, 预计总销售额: ¥{self.forecast_df.loc[self.forecast_df['is_forecast'], 'predicted'].sum():,.0f}")
+        logger.info(f"预测未来 {forecast_days} 天, 预计总销售额: {self.forecast_df.loc[self.forecast_df['is_forecast'], 'predicted'].sum():,.0f} 元")
         return self.forecast_df
 
     def fit_predict(self, df: pd.DataFrame) -> pd.DataFrame:
